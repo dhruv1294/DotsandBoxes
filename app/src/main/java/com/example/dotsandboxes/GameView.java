@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.media.MediaPlayer;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -35,7 +36,7 @@ public class GameView extends View implements Observer {
     Paint linePaint;
     Paint boardPaint;
     Rect board;
-    int gridSize = GameActivity.gridSize;
+    int gridSize = MultiPlayerGridSelectionActivity.gridfinal;
 
 
     Rect Border;
@@ -44,6 +45,7 @@ public class GameView extends View implements Observer {
 
     int linewidth=40;
     protected Line move;
+    protected int noOfPlayers=MultiPlayerGridSelectionActivity.players;
 
     protected int[] playerColors;
     protected int[] playerBoxColors;
@@ -58,6 +60,8 @@ public class GameView extends View implements Observer {
     Paint boardBorder;
     Paint lineColor;
     protected  PlayerStateView playerState;
+    MediaPlayer sound;
+
 
 
 
@@ -90,7 +94,7 @@ public class GameView extends View implements Observer {
         linePaint.setColor(Color.WHITE);
         linePaint.setStrokeWidth(10);
         boardPaint = new Paint();
-        boardPaint.setColor(Color.YELLOW);
+        boardPaint.setColor(Color.parseColor("#eacda3"));
         boardBorder = new Paint();
         boardBorder.setStrokeWidth(10);
         boardBorder.setStyle(Paint.Style.STROKE);
@@ -102,9 +106,15 @@ public class GameView extends View implements Observer {
 
         board = new Rect();
         Border = new Rect();
-        playerColors = new int[]{Color.RED,Color.BLUE};
+        if(noOfPlayers==2) {
+            playerColors = new int[]{Color.RED, Color.BLUE};
+        }else if(noOfPlayers==3){
+            playerColors = new int[]{Color.RED,Color.BLUE,Color.GREEN};
+        }else if(noOfPlayers==4){
+            playerColors = new int[]{Color.RED,Color.BLUE,Color.GREEN,Color.MAGENTA};
+        }
         playerBoxColors = new int[]{Color.parseColor("#ff726f"),Color.CYAN};
-
+        sound = MediaPlayer.create(getContext(),R.raw.sound);
 
 
 
@@ -173,7 +183,7 @@ public class GameView extends View implements Observer {
                 }
                 canvas.drawRect(cellSize*(j+1)+linewidth,margintop+cellSize*i,cellSize*(j+2),margintop+cellSize*i+linewidth,lineColor);
                 Line vertical = new Line(Direction.VERTICAL, j, i);
-                if (vertical.equals(game.getLatestLine())) {
+                 if (vertical.equals(game.getLatestLine())) {
                     lineColor.setColor(game.getLineOccupier(j, i) == null ? Color.WHITE : playerColors[Player.indexIn(game.getLineOccupier(j, i), game.getPlayers())]);
                 } else if (game.isLineOccupied(vertical)) {
                     //lineColor.setColor(game.getLineOccupier(j, i) == null ? Color.GREEN : playerColors[Player.indexIn(game.getLineOccupier(j, i), game.getPlayers())]);
@@ -239,6 +249,7 @@ public class GameView extends View implements Observer {
                 }
 
                 if((a!=-1) && (b!=-1)){
+                    sound.start();
                     Direction direction;
                     if(d==0){
                         direction=Direction.HORIZONTAL;

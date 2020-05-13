@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/background_dark"
-    tools:context=".GridSelectionActivity">
+    tools:context=".MultiPlayerGridSelectionActivity">
 
     <TextView
         android:id="@+id/gridSIzeTextView"
@@ -24,32 +24,25 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/button4x4"
-        android:layout_width="wrap_content"
+    <Spinner
+        android:id="@+id/spinner"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="40dp"
-        android:background="@color/colorPrimary"
-        android:padding="10dp"
-        android:text="4X4"
-        android:textAlignment="center"
-        android:textAllCaps="false"
-        android:textColor="@android:color/background_dark"
-        android:textSize="24sp"
-        android:textStyle="bold"
+        android:popupBackground="@color/colorAccent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/gridSIzeTextView" />
 
     <Button
-        android:id="@+id/button5x5"
+        android:id="@+id/dualPlayerButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
         android:background="@color/colorPrimary"
         android:padding="10dp"
-        android:text="5X5"
+        android:text="2 Players"
         android:textAlignment="center"
         android:textAllCaps="false"
         android:textColor="@android:color/background_dark"
@@ -58,16 +51,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button4x4" />
+        app:layout_constraintTop_toBottomOf="@+id/spinner" />
 
     <Button
-        android:id="@+id/button7x7"
+        android:id="@+id/threePlayerButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
         android:background="@color/colorPrimary"
         android:padding="10dp"
-        android:text="7X7"
+        android:text="3 Players"
         android:textAlignment="center"
         android:textAllCaps="false"
         android:textColor="@android:color/background_dark"
@@ -76,16 +69,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button5x5" />
+        app:layout_constraintTop_toBottomOf="@+id/dualPlayerButton" />
 
     <Button
-        android:id="@+id/button10x10"
+        android:id="@+id/fourPlayerButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
         android:background="@color/colorPrimary"
         android:padding="10dp"
-        android:text="10X10"
+        android:text="4 Players"
         android:textAlignment="center"
         android:textAllCaps="false"
         android:textColor="@android:color/background_dark"
@@ -94,5 +87,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button7x7" />
+        app:layout_constraintTop_toBottomOf="@+id/threePlayerButton" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

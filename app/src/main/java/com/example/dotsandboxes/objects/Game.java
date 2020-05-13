@@ -2,8 +2,8 @@ package com.example.dotsandboxes.objects;
 
 import android.util.Log;
 
-import com.example.dotsandboxes.GameActivity;
-import com.example.dotsandboxes.GridSelectionActivity;
+
+import com.example.dotsandboxes.MultiPlayerGridSelectionActivity;
 
 import java.util.Observable;
 
@@ -12,7 +12,7 @@ public class Game extends Observable {
     private int currentPlayerIndex;
     private int width;
     private int height;
-    int maxGrid = GameActivity.gridSize-1;
+    int maxGrid = MultiPlayerGridSelectionActivity.gridfinal-1;
 
 
     private Player[][] occupied;
@@ -220,8 +220,22 @@ public class Game extends Observable {
 
 
         if(sum==(maxGrid*maxGrid)) {
+            int maxScore=playersOccupyingBoxCount[0];
+            int maxIndex=0;
+            for(int i=0;i<players.length;i++){
+                if(playersOccupyingBoxCount[i]>maxScore){
+                    maxScore=playersOccupyingBoxCount[i];
+                    maxIndex=i;
+                }
+            }
+            for(int i=0;i<players.length;i++){
+                if(playersOccupyingBoxCount[maxIndex]==playersOccupyingBoxCount[i]&&i!=maxIndex){
+                    return "It's a Tie";
+                }
+            }
+            return players[maxIndex].getName();
 
-            if (playersOccupyingBoxCount[0] > playersOccupyingBoxCount[1]) {
+            /*if (playersOccupyingBoxCount[0] > playersOccupyingBoxCount[1]) {
                 Log.i("winner", players[0].getName());
                 return players[0].getName();
             } else if(playersOccupyingBoxCount[0] < playersOccupyingBoxCount[1]){
@@ -229,7 +243,7 @@ public class Game extends Observable {
                 return players[1].getName();
             }else{
                 return "It's a Tie!!";
-            }
+            }*/
         }
         return null;
 

@@ -4,9 +4,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.TextView;
 
 import com.example.dotsandboxes.objects.HumanPlayer;
@@ -15,56 +13,39 @@ import com.example.dotsandboxes.objects.PlayerStateView;
 
 import java.util.Map;
 
-public class GameActivity extends AppCompatActivity implements PlayerStateView {
-
+public class GameFourActivity extends AppCompatActivity implements PlayerStateView {
     GameView GameView;
     Player[] players;
-    Integer[] playersOccupying = new Integer[]{0, 0};
+    Integer[] playersOccupying = new Integer[]{0, 0, 0, 0};
     Player currentPlayer;
     int gridSize = MultiPlayerGridSelectionActivity.gridfinal;
-
-
-
-
-
-    TextView player1name, player2name, player1state, player2state, player1occupying, player2occupying;
+    TextView player1name, player2name,player3name,player4name, player1state, player2state,player3state,player4state, player1occupying, player2occupying,player3occupying,player4occupying;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_game);
+        setContentView(R.layout.activity_game_four);
         GameView =  findViewById(R.id.gameView);
 
         GameView.setPlayerState(this);
-        Intent intent = getIntent();
-        Log.i("gridSize",Integer.toString(gridSize));
-        Log.i("intent",Integer.toString(intent.getIntExtra("gridSize",6)));
 
-        gridSize = intent.getIntExtra("gridSize",4);
+        player1name = findViewById(R.id.player14name);
+        player2name = findViewById(R.id.player24name);
+        player3name = findViewById(R.id.player34name);
+        player4name = findViewById(R.id.player44name);
+        player1state = findViewById(R.id.player14state);
+        player2state = findViewById(R.id.player24state);
+        player3state = findViewById(R.id.player34state);
+        player4state = findViewById(R.id.player44state);
+        player1occupying = findViewById(R.id.player14occupying);
+        player2occupying = findViewById(R.id.player24occupying);
+        player3occupying = findViewById(R.id.player34occupying);
+        player4occupying = findViewById(R.id.player44occupying);
 
-
-
-
-        player1name = findViewById(R.id.player1name);
-        player2name = findViewById(R.id.player2name);
-        player1state = findViewById(R.id.player1state);
-        player2state = findViewById(R.id.player2state);
-        player1occupying = findViewById(R.id.player1occupying);
-        player2occupying = findViewById(R.id.player2occupying);
-
-
-        players =  new Player[]{new HumanPlayer("Player1"), new HumanPlayer("Player2")};
-
-
+        players =  new Player[]{new HumanPlayer("Player1"), new HumanPlayer("Player2"),new HumanPlayer("Player3"),new HumanPlayer("Player4")};
         GameView.startGame(players);
-
         updateState();
-
-
-
     }
-
-
 
     public void updateState() {
         runOnUiThread(new Runnable() {
@@ -73,12 +54,28 @@ public class GameActivity extends AppCompatActivity implements PlayerStateView {
                 if (currentPlayer == players[0]) {
                     player1state.setText("Thinking");
                     player2state.setText("Waiting");
-                } else {
+                    player3state.setText("Waiting");
+                    player4state.setText("Waiting");
+                } else if(currentPlayer==players[1]) {
                     player2state.setText("Thinking");
                     player1state.setText("Waiting");
+                    player3state.setText("Waiting");
+                    player4state.setText("Waiting");
+                }else if(currentPlayer==players[2]){
+                    player2state.setText("Waiting");
+                    player1state.setText("Waiting");
+                    player3state.setText("Thinking");
+                    player4state.setText("Waiting");
+                }else{
+                    player2state.setText("Waiting");
+                    player1state.setText("Waiting");
+                    player3state.setText("Waiting");
+                    player4state.setText("Thinking");
                 }
                 player1occupying.setText("Boxes: " + playersOccupying[0]);
                 player2occupying.setText("Boxes: " + playersOccupying[1]);
+                player3occupying.setText("Boxes:" + playersOccupying[2]);
+                player4occupying.setText("Boxes:" + playersOccupying[3]);
             }
         });
     }
@@ -87,18 +84,20 @@ public class GameActivity extends AppCompatActivity implements PlayerStateView {
     public void setCurrentPlayer(Player player) {
         currentPlayer = player;
         updateState();
+
     }
 
     @Override
     public void setPlayerOccupyingBoxesCount(Map<Player, Integer> player_occupyingBoxesCount_map) {
         playersOccupying[0] = player_occupyingBoxesCount_map.get(players[0]);
         playersOccupying[1] = player_occupyingBoxesCount_map.get(players[1]);
+        playersOccupying[2] = player_occupyingBoxesCount_map.get(players[2]);
+        playersOccupying[3] = player_occupyingBoxesCount_map.get(players[3]);
         updateState();
-
     }
 
     @Override
-    public void setWinner( final String winner) {
+    public void setWinner(final String winner) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -109,7 +108,7 @@ public class GameActivity extends AppCompatActivity implements PlayerStateView {
                     result = winner + " Wins!!";
                 }
 
-                new AlertDialog.Builder(GameActivity.this)
+                new AlertDialog.Builder(GameFourActivity.this)
                         .setTitle("Dots And Boxes")
                         .setMessage(result)
                         .setPositiveButton("Play again",
@@ -129,6 +128,7 @@ public class GameActivity extends AppCompatActivity implements PlayerStateView {
                         .show();
             }
         });
+
 
     }
 }
