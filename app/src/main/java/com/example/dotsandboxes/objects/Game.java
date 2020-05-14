@@ -3,6 +3,9 @@ package com.example.dotsandboxes.objects;
 import android.util.Log;
 
 
+import com.example.dotsandboxes.GameActivity;
+import com.example.dotsandboxes.GameFourActivity;
+import com.example.dotsandboxes.GameThreeActivity;
 import com.example.dotsandboxes.MultiPlayerGridSelectionActivity;
 
 import java.util.Observable;
@@ -32,7 +35,7 @@ public class Game extends Observable {
         horizontalLines = new boolean[height+1][width];
         verticalLines = new boolean[height][width+1];
 
-        // addPlayersToGame(players);
+
         currentPlayerIndex=0;
 
 
@@ -53,18 +56,19 @@ public class Game extends Observable {
         return latestLine;
     }
 
-    /*private void addPlayersToGame(Player[] players){
-        for(Player player : players){
-            player.addToGame(this);
-        }
-    }*/
+
 
 
     public void start(){
+        GameActivity.started=1;
+        GameThreeActivity.started=1;
+        GameFourActivity.started=1;
         while(!isGameFinished()){
-            addMove(currentPlayer().move());
-            setChanged();
-            notifyObservers();
+
+                addMove(currentPlayer().move());
+                setChanged();
+                notifyObservers();
+
         }
 
     }
@@ -79,6 +83,7 @@ public class Game extends Observable {
         toNextPlayer();
 
     }
+
     public Player currentPlayer(){
         return players[currentPlayerIndex];
     }
@@ -135,6 +140,17 @@ public class Game extends Observable {
                 break;
             case HORIZONTAL:
                 horizontalLines[line.row()][line.column()] = true;
+                break;
+
+        }
+    }
+    private void unsetLineOccupied(Line line){
+        switch (line.direction()){
+            case VERTICAL:
+                verticalLines[line.row()][line.column()] = false;
+                break;
+            case HORIZONTAL:
+                horizontalLines[line.row()][line.column()] = false;
                 break;
 
         }

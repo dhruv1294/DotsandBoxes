@@ -4,7 +4,10 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.widget.TextView;
 
 import com.example.dotsandboxes.objects.HumanPlayer;
@@ -18,6 +21,7 @@ public class GameFourActivity extends AppCompatActivity implements PlayerStateVi
     Player[] players;
     Integer[] playersOccupying = new Integer[]{0, 0, 0, 0};
     Player currentPlayer;
+    public static int started=0;
     int gridSize = MultiPlayerGridSelectionActivity.gridfinal;
     TextView player1name, player2name,player3name,player4name, player1state, player2state,player3state,player4state, player1occupying, player2occupying,player3occupying,player4occupying;
 
@@ -26,6 +30,7 @@ public class GameFourActivity extends AppCompatActivity implements PlayerStateVi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_four);
         GameView =  findViewById(R.id.gameView);
+        started=0;
 
         GameView.setPlayerState(this);
 
@@ -51,7 +56,13 @@ public class GameFourActivity extends AppCompatActivity implements PlayerStateVi
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (currentPlayer == players[0]) {
+                if(started == 0){
+                    player1state.setText("Thinking");
+                    player2state.setText("Waiting");
+                    player3state.setText("Waiting");
+                    player4state.setText("Waiting");
+                }
+                else if (currentPlayer == players[0]) {
                     player1state.setText("Thinking");
                     player2state.setText("Waiting");
                     player3state.setText("Waiting");
@@ -101,6 +112,13 @@ public class GameFourActivity extends AppCompatActivity implements PlayerStateVi
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                started=0;
+                Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+                if (Build.VERSION.SDK_INT >= 26) {
+                    vibrator.vibrate(VibrationEffect.createOneShot(200, VibrationEffect.DEFAULT_AMPLITUDE));
+                } else {
+                    vibrator.vibrate(200);
+                }
                 String result="";
                 if(winner.equals("It's a Tie")){
                     result = winner;

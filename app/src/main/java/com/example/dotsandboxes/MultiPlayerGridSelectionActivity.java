@@ -3,6 +3,7 @@ package com.example.dotsandboxes;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -18,10 +19,14 @@ public class MultiPlayerGridSelectionActivity extends AppCompatActivity {
     Spinner spin;
     Button dualPlayerButton,threePlayerButton,fourPlayerButton;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_multi_player_grid_selection);
+        GameActivity.started=0;
+        GameThreeActivity.started=0;
+        GameFourActivity.started=0;
         dualPlayerButton=findViewById(R.id.dualPlayerButton);
         threePlayerButton = findViewById(R.id.threePlayerButton);
         fourPlayerButton = findViewById(R.id.fourPlayerButton);
@@ -45,6 +50,8 @@ public class MultiPlayerGridSelectionActivity extends AppCompatActivity {
         dualPlayerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                MediaPlayer mediaPlayer = MediaPlayer.create(getApplicationContext(),R.raw.sound2);
+                mediaPlayer.start();
                 Intent intent = new Intent(getApplicationContext(),GameActivity.class);
                 players=2;
                 startActivity(intent);
@@ -53,6 +60,8 @@ public class MultiPlayerGridSelectionActivity extends AppCompatActivity {
         threePlayerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                MediaPlayer mediaPlayer = MediaPlayer.create(getApplicationContext(),R.raw.sound2);
+                mediaPlayer.start();
                 Intent intent = new Intent(getApplicationContext(),GameThreeActivity.class);
                 players=3;
                 startActivity(intent);
@@ -61,6 +70,8 @@ public class MultiPlayerGridSelectionActivity extends AppCompatActivity {
         fourPlayerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                MediaPlayer mediaPlayer = MediaPlayer.create(getApplicationContext(),R.raw.sound2);
+                mediaPlayer.start();
                 Intent intent = new Intent(getApplicationContext(),GameFourActivity.class);
                 players=4;
                 startActivity(intent);

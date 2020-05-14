@@ -41,7 +41,7 @@
         android:layout_alignLeft="@id/player1name"
         android:layout_marginStart="50dp"
         android:layout_marginTop="70dp"
-        android:text="Waiting"
+        android:text="Thinking"
         android:textAlignment="center"
         android:textColor="@android:color/holo_red_dark"
         android:textSize="18sp"

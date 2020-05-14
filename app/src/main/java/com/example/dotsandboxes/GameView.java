@@ -155,21 +155,12 @@ public class GameView extends View implements Observer {
 
         board.set(0, 0, getWidth(), getHeight());
         Border.set(0, 0, getWidth(), getHeight());
-        //Log.i("width", Integer.toString(width));
+
         canvas.drawRect(board, boardPaint);
         canvas.drawRect(Border, boardBorder);
 
 
-        //board
-        /*for(int i=0;i<gridSize;i++){
-            canvas.drawLine(cellSize,margintop+cellSize*i,cellSize*gridSize+linewidth,margintop+cellSize*i,mPaint);
-            canvas.drawLine(cellSize,margintop+cellSize*i+linewidth,cellSize*gridSize+linewidth,margintop+cellSize*i+linewidth,mPaint);
-            canvas.drawLine(cellSize*(i+1),margintop,cellSize*(i+1),margintop+cellSize*(gridSize-1)+linewidth,mPaint);
-            canvas.drawLine(cellSize*(i+1)+linewidth,margintop,cellSize*(i+1)+linewidth,margintop+cellSize*(gridSize-1)+linewidth,mPaint);
-        }*/
 
-        //paint board
-        //mPaint.setColor(Color.WHITE);
         for(int i=0;i<gridSize;i++){
             for(int j=0;j<gridSize-1;j++){
                 Line horizontal = new Line(Direction.HORIZONTAL, i, j);
@@ -198,8 +189,7 @@ public class GameView extends View implements Observer {
         for(int i=0;i<gridSize-1;i++){
             for(int j=0;j<gridSize-1;j++){
 
-               /*for (int i = 0; i < game.getWidth(); i++) {
-                    for (int j = 0; j < game.getHeight(); j++) {*/
+
                 linePaint.setColor(game.getBoxOccupier(j, i) == null ? Color.TRANSPARENT : playerColors[Player.indexIn(game.getBoxOccupier(j, i), game.getPlayers())]);
                 canvas.drawRect(cellSize*(i+1)+linewidth,margintop+cellSize*j+linewidth,cellSize*(i+2),margintop+cellSize*(j+1),linePaint);
             }
@@ -249,6 +239,8 @@ public class GameView extends View implements Observer {
                 }
 
                 if((a!=-1) && (b!=-1)){
+
+
                     sound.start();
                     Direction direction;
                     if(d==0){
@@ -257,8 +249,16 @@ public class GameView extends View implements Observer {
                         direction = Direction.VERTICAL;
                     }
                     move = new Line(direction,a,b);
-                    game.setLineOccupier(a,b,game.currentPlayer());
-                    ((HumanPlayer)game.currentPlayer()).add(move);
+
+                    game.setLineOccupier(a, b, game.currentPlayer());
+
+                    try {
+                        ((HumanPlayer) game.currentPlayer()).add(move);
+                    } catch (Exception e) {
+                        Log.e("GameView", e.toString());
+                    }
+
+
                 }
 
                 invalidate();
