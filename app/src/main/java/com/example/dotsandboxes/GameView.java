@@ -42,6 +42,7 @@ public class GameView extends View implements Observer {
     Rect Border;
     int dotRadius;
     int margintop;
+    Thread t1;
 
     int linewidth=40;
     protected Line move;
@@ -49,6 +50,8 @@ public class GameView extends View implements Observer {
 
     protected int[] playerColors;
     protected int[] playerBoxColors;
+    public static int undo=0;
+    public int undoBox=0;
 
 
 
@@ -132,12 +135,13 @@ public class GameView extends View implements Observer {
         game.addObserver(this);
         Log.i("gridSize",Integer.toString(gridSize));
 
-        new Thread() {
+        t1 = new Thread() {
             @Override
             public void run() {
                 game.start();
             }
-        }.start();
+        };
+        t1.start();
         postInvalidate();
     }
 
@@ -210,6 +214,23 @@ public class GameView extends View implements Observer {
     }
 
 
+    public void undo(){
+         undo=1;
+         Line line = game.latestLine;
+         if(game.tryToOccupyBox(line)){
+             undoBox=1;
+         }
+         game.unsetLineOccupied(line);
+         game.unsetLineOccupier(line.row(),line.column());
+         if(game.tryToOccupyLeftBox(line)){
+             game.unsetBoxOccupied(line.row(),line.column()-1);
+         }else if(game.tryToOccupyUpperBox(line)){
+             game.unsetBoxOccupied(line.row()-1,line.column());
+         }
+         game.unsetBoxOccupied(line.row(),line.column());
+    }
+
+
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -249,14 +270,27 @@ public class GameView extends View implements Observer {
                         direction = Direction.VERTICAL;
                     }
                     move = new Line(direction,a,b);
+                    if(undo == 1){
+                       if(undoBox==1){
+                           game.setLineOccupier(a,b,game.currentPlayer());
+                           ((HumanPlayer) game.currentPlayer()).add(move);
+                           undoBox=0;
+                           undo=0;
 
-                    game.setLineOccupier(a, b, game.currentPlayer());
+                       }else{
 
-                    try {
+                           game.setLineOccupier(a,b,game.previousPlayer());
+                           game.setCurrentPlayer();
+
+                           undo=0;
+
+                           ((HumanPlayer) game.previousPlayer()).add(move);
+                       }
+                    }else {
+                        game.setLineOccupier(a, b, game.currentPlayer());
                         ((HumanPlayer) game.currentPlayer()).add(move);
-                    } catch (Exception e) {
-                        Log.e("GameView", e.toString());
                     }
+
 
 
                 }

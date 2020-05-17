@@ -6,13 +6,15 @@ import android.util.Log;
 import com.example.dotsandboxes.GameActivity;
 import com.example.dotsandboxes.GameFourActivity;
 import com.example.dotsandboxes.GameThreeActivity;
+import com.example.dotsandboxes.GameView;
 import com.example.dotsandboxes.MultiPlayerGridSelectionActivity;
 
 import java.util.Observable;
 
 public class Game extends Observable {
-    private Player[] players;
-    private int currentPlayerIndex;
+    public Player[] players;
+    public int currentPlayerIndex;
+    public int previousPlayerIndex;
     private int width;
     private int height;
     int maxGrid = MultiPlayerGridSelectionActivity.gridfinal-1;
@@ -22,7 +24,7 @@ public class Game extends Observable {
     private Player[][]lineOccupied;
     private boolean[][] horizontalLines;
     private boolean[][] verticalLines;
-    private Line latestLine;
+    public Line latestLine;
 
     public Game(int width,int height,Player[] players ){
 
@@ -64,8 +66,9 @@ public class Game extends Observable {
         GameThreeActivity.started=1;
         GameFourActivity.started=1;
         while(!isGameFinished()){
-
+                if(GameView.undo==0)
                 addMove(currentPlayer().move());
+                else addMove(previousPlayer().move());
                 setChanged();
                 notifyObservers();
 
@@ -86,6 +89,25 @@ public class Game extends Observable {
 
     public Player currentPlayer(){
         return players[currentPlayerIndex];
+    }
+    public Player previousPlayer(){
+        if(currentPlayerIndex==0){
+            previousPlayerIndex=players.length-1;
+            Log.i("here",Integer.toString(previousPlayerIndex));
+        }else{
+
+            previousPlayerIndex = currentPlayerIndex-1;
+            Log.i("here",Integer.toString(previousPlayerIndex));
+        }
+        Log.i("prevous","player");
+        return players[previousPlayerIndex];
+    }
+
+    public void setCurrentPlayer(){
+        currentPlayerIndex = previousPlayerIndex;
+        Log.i("index",Integer.toString(currentPlayerIndex));
+        setChanged();
+        notifyObservers();
     }
     public boolean isLineOccupied(Direction direction, int row, int column){
         return isLineOccupied(new Line(direction,row,column));
@@ -123,8 +145,11 @@ public class Game extends Observable {
     {
         lineOccupied[row][column] = player;
     }
+    public void unsetLineOccupier(int row,int column){
+      lineOccupied[row][column]=null;
+    }
 
-    private boolean tryToOccupyBox(Line move){
+    public boolean tryToOccupyBox(Line move){
         boolean rightOccupied = tryToOccupyRightBox(move);
         boolean underOccupied = tryToOccupyUnderBox(move);
         boolean upperOccupied = tryToOccupyUpperBox(move);
@@ -144,7 +169,7 @@ public class Game extends Observable {
 
         }
     }
-    private void unsetLineOccupied(Line line){
+    public void unsetLineOccupied(Line line){
         switch (line.direction()){
             case VERTICAL:
                 verticalLines[line.row()][line.column()] = false;
@@ -159,8 +184,11 @@ public class Game extends Observable {
     private void setBoxOccupied(int row, int column , Player player){
         occupied[row][column] = player;
     }
+    public void unsetBoxOccupied(int row,int column){
+        occupied[row][column]=null;
+    }
 
-    private boolean tryToOccupyUpperBox(Line move){
+    public boolean tryToOccupyUpperBox(Line move){
         if(move.direction()!=Direction.HORIZONTAL || move.row()<=0){
             return false;
         }
@@ -184,7 +212,7 @@ public class Game extends Observable {
         }
     }
 
-    private boolean tryToOccupyLeftBox(Line move){
+    public boolean tryToOccupyLeftBox(Line move){
         if(move.direction()!=Direction.VERTICAL || move.column()<=0){
             return false;
         }

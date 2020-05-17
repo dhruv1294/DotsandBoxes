@@ -1,5 +1,6 @@
 package com.example.dotsandboxes;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -8,6 +9,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.example.dotsandboxes.objects.HumanPlayer;
@@ -26,7 +30,26 @@ public class GameThreeActivity extends AppCompatActivity implements PlayerStateV
     public static int started=0;
     TextView player1name, player2name,player3name, player1state, player2state,player3state, player1occupying, player2occupying,player3occupying;
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.undo_menu,menu);
 
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if(item.getItemId()==R.id.undo){
+            try{
+                GameView.undo();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+        super.onOptionsItemSelected(item);
+        return true;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
