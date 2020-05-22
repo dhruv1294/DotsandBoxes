@@ -36,7 +36,8 @@ public class GameView extends View implements Observer {
     Paint linePaint;
     Paint boardPaint;
     Rect board;
-    int gridSize = MultiPlayerGridSelectionActivity.gridfinal;
+    public static int gridSize ;
+
 
 
     Rect Border;
@@ -52,13 +53,14 @@ public class GameView extends View implements Observer {
     protected int[] playerBoxColors;
     public static int undo=0;
     public int undoBox=0;
+    int minSpace;
 
 
 
 
     int height;
     int width;
-    int cellSize = width / gridSize;
+    int cellSize;
     protected Game game;
     Paint boardBorder;
     Paint lineColor;
@@ -102,20 +104,26 @@ public class GameView extends View implements Observer {
         boardBorder.setStrokeWidth(10);
         boardBorder.setStyle(Paint.Style.STROKE);
         boardBorder.setColor(Color.RED);
-
+        if(HomeActivity.mode.equals("single")){
+            gridSize=SingleGridModeActivity.grid;
+            playerColors = new int[]{Color.RED,Color.BLUE};
+        }else{
+            gridSize=MultiPlayerGridSelectionActivity.gridfinal;
+            if(noOfPlayers==2) {
+                playerColors = new int[]{Color.RED, Color.BLUE};
+            }else if(noOfPlayers==3){
+                playerColors = new int[]{Color.RED,Color.BLUE,Color.GREEN};
+            }else if(noOfPlayers==4){
+                playerColors = new int[]{Color.RED,Color.BLUE,Color.GREEN,Color.MAGENTA};
+            }
+        }
         lineColor = new Paint();
         lineColor.setAntiAlias(true);
         lineColor.setColor(Color.WHITE);
 
         board = new Rect();
         Border = new Rect();
-        if(noOfPlayers==2) {
-            playerColors = new int[]{Color.RED, Color.BLUE};
-        }else if(noOfPlayers==3){
-            playerColors = new int[]{Color.RED,Color.BLUE,Color.GREEN};
-        }else if(noOfPlayers==4){
-            playerColors = new int[]{Color.RED,Color.BLUE,Color.GREEN,Color.MAGENTA};
-        }
+
         playerBoxColors = new int[]{Color.parseColor("#ff726f"),Color.CYAN};
         sound = MediaPlayer.create(getContext(),R.raw.sound);
 
@@ -155,6 +163,8 @@ public class GameView extends View implements Observer {
         margintop = cellSize;
         dotRadius = cellSize / 6;
         linewidth = cellSize/6;
+        minSpace=linewidth/2;
+
 
 
         board.set(0, 0, getWidth(), getHeight());
@@ -169,9 +179,11 @@ public class GameView extends View implements Observer {
             for(int j=0;j<gridSize-1;j++){
                 Line horizontal = new Line(Direction.HORIZONTAL, i, j);
                 if (horizontal.equals(game.getLatestLine())) {
-                    lineColor.setColor(game.getLineOccupier(i, j) == null ? Color.WHITE : playerColors[Player.indexIn(game.getLineOccupier(i, j), game.getPlayers())]);
+                    //lineColor.setColor(Color.parseColor("#A52A2A"));
+                     lineColor.setColor(game.getLineOccupier(horizontal) == 0 ? Color.WHITE : playerColors[game.getLineOccupier(horizontal)-1]);
                 } else if (game.isLineOccupied(horizontal)) {
                     //lineColor.setColor(game.getLineOccupier(i, j) == null ? Color.GREEN : playerColors[Player.indexIn(game.getLineOccupier(i, j), game.getPlayers())]);
+                    //lineColor.setColor(game.getLineOccupier(horizontal) == 0 ? Color.WHITE : playerColors[game.getLineOccupier(horizontal)-1]);
                     lineColor.setColor(Color.BLACK);
                 } else {
                     lineColor.setColor(Color.WHITE);
@@ -179,10 +191,12 @@ public class GameView extends View implements Observer {
                 canvas.drawRect(cellSize*(j+1)+linewidth,margintop+cellSize*i,cellSize*(j+2),margintop+cellSize*i+linewidth,lineColor);
                 Line vertical = new Line(Direction.VERTICAL, j, i);
                  if (vertical.equals(game.getLatestLine())) {
-                    lineColor.setColor(game.getLineOccupier(j, i) == null ? Color.WHITE : playerColors[Player.indexIn(game.getLineOccupier(j, i), game.getPlayers())]);
+                     //lineColor.setColor(Color.parseColor("#A52A2A"));
+                     lineColor.setColor(game.getLineOccupier(vertical) == 0 ? Color.WHITE : playerColors[game.getLineOccupier(vertical)-1]);
                 } else if (game.isLineOccupied(vertical)) {
                     //lineColor.setColor(game.getLineOccupier(j, i) == null ? Color.GREEN : playerColors[Player.indexIn(game.getLineOccupier(j, i), game.getPlayers())]);
-                    lineColor.setColor(Color.BLACK);
+                     //lineColor.setColor(game.getLineOccupier(vertical) == 0 ? Color.WHITE : playerColors[game.getLineOccupier(vertical)-1]);
+                      lineColor.setColor(Color.BLACK);
                 } else {
                     lineColor.setColor(Color.WHITE);
                 }
@@ -195,7 +209,7 @@ public class GameView extends View implements Observer {
 
 
                 linePaint.setColor(game.getBoxOccupier(j, i) == null ? Color.TRANSPARENT : playerColors[Player.indexIn(game.getBoxOccupier(j, i), game.getPlayers())]);
-                canvas.drawRect(cellSize*(i+1)+linewidth,margintop+cellSize*j+linewidth,cellSize*(i+2),margintop+cellSize*(j+1),linePaint);
+                canvas.drawRect(cellSize*(i+1)+linewidth,margintop+cellSize*j+linewidth ,cellSize*(i+2) ,margintop+cellSize*(j+1) ,linePaint);
             }
         }
 
@@ -215,19 +229,23 @@ public class GameView extends View implements Observer {
 
 
     public void undo(){
-         undo=1;
-         Line line = game.latestLine;
-         if(game.tryToOccupyBox(line)){
-             undoBox=1;
-         }
-         game.unsetLineOccupied(line);
-         game.unsetLineOccupier(line.row(),line.column());
-         if(game.tryToOccupyLeftBox(line)){
-             game.unsetBoxOccupied(line.row(),line.column()-1);
-         }else if(game.tryToOccupyUpperBox(line)){
-             game.unsetBoxOccupied(line.row()-1,line.column());
-         }
-         game.unsetBoxOccupied(line.row(),line.column());
+        if(game.latestLine!=null) {
+            undo = 1;
+            Line line = game.latestLine;
+            if (game.tryToOccupyBox(line)) {
+                undoBox = 1;
+            }
+            game.unsetLineOccupied(line);
+            game.unsetLineOccupier(line.row(), line.column());
+            if (game.tryToOccupyLeftBox(line)) {
+                game.unsetBoxOccupied(line.row(), line.column() - 1);
+            } else if (game.tryToOccupyUpperBox(line)) {
+                game.unsetBoxOccupied(line.row() - 1, line.column());
+            } else {
+                game.unsetBoxOccupied(line.row(), line.column());
+            }
+        }
+         //postInvalidate();
     }
 
 
@@ -285,6 +303,7 @@ public class GameView extends View implements Observer {
                            undo=0;
 
                            ((HumanPlayer) game.previousPlayer()).add(move);
+                           invalidate();
                        }
                     }else {
                         game.setLineOccupier(a, b, game.currentPlayer());

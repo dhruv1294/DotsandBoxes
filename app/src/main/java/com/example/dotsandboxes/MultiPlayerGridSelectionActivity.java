@@ -13,7 +13,7 @@ import android.widget.Button;
 import android.widget.Spinner;
 
 public class MultiPlayerGridSelectionActivity extends AppCompatActivity {
-    String[] grids = {"3X3","4X4","5X5","6X6","7X7","8X8","9x9","10x10"};
+    String[] grids = {"3X3","4X4","5X5","6X6","7X7","8X8"};
     public static int gridfinal;
     public static int players;
     Spinner spin;

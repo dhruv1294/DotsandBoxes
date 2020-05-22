@@ -29,7 +29,7 @@ public class GameFourActivity extends AppCompatActivity implements PlayerStateVi
     int gridSize = MultiPlayerGridSelectionActivity.gridfinal;
     TextView player1name, player2name,player3name,player4name, player1state, player2state,player3state,player4state, player1occupying, player2occupying,player3occupying,player4occupying;
 
-    @Override
+    /*@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.undo_menu,menu);
@@ -48,7 +48,7 @@ public class GameFourActivity extends AppCompatActivity implements PlayerStateVi
         }
         super.onOptionsItemSelected(item);
         return true;
-    }
+    }*/
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

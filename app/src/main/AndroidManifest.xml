@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.dotsandboxes">
-    <uses-permission android:name="android.permission.VIBRATE"></uses-permission>
+
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:allowBackup="true"
@@ -10,17 +11,27 @@
         android:roundIcon="@mipmap/ic_launcher2_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
-        <activity android:name=".GameFourActivity"
+        <activity android:name=".GameSingleActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name=".SingleGridModeActivity"
+            android:noHistory="true"
             android:screenOrientation="portrait"/>
-        <activity android:name=".GameThreeActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".MultiPlayerGridSelectionActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".HomeActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".GameActivity"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".GameFourActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".GameThreeActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".MultiPlayerGridSelectionActivity"
+            android:screenOrientation="portrait"
+            android:noHistory="true"/>
+        <activity
+            android:name=".HomeActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".GameActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".MainActivity"
             android:noHistory="true"
